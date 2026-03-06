@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tiger Lily Books</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --tiger: #E8521A;
+      --lily: #F4A261;
+      --cream: #FAF5EC;
+      --ink: #1A1208;
+      --moss: #3D4A2E;
+      --dust: #C9B99A;
+      --pale: #F0E8D8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 12px; height: 12px;
+      background: var(--tiger);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+      mix-blend-mode: multiply;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--tiger);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.18s ease, width 0.3s, height 0.3s, opacity 0.3s;
+      opacity: 0.5;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.35;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 3rem;
+      mix-blend-mode: multiply;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      color: var(--ink);
+      opacity: 0.65;
+      transition: opacity 0.2s;
+      text-transform: uppercase;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8rem 3rem 5rem 5rem;
+      position: relative;
+    }
+
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--tiger);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.3s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4rem, 7vw, 7.5rem);
+      line-height: 0.92;
+      font-weight: 900;
+      color: var(--ink);
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--tiger);
+    }
+
+    .hero-sub {
+      margin-top: 2.5rem;
+      font-size: 1.25rem;
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 380px;
+      color: var(--ink);
+      opacity: 0;
+      animation: fadeUp 0.9s 0.7s forwards;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.9s forwards;
+    }
+
+    .btn-primary {
+      background: var(--tiger);
+      color: var(--cream);
+      padding: 1rem 2.4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: none;
+      transition: background 0.25s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--ink); transform: translateY(-2px); }
+
+    .btn-ghost {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+      border-bottom: 1px solid var(--dust);
+      padding-bottom: 2px;
+      transition: border-color 0.2s, color 0.2s;
+      cursor: none;
+    }
+    .btn-ghost:hover { color: var(--tiger); border-color: var(--tiger); }
+
+    .hero-right {
+      background: var(--pale);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-illustration {
+      position: relative;
+      width: 340px;
+      height: 480px;
+      opacity: 0;
+      animation: fadeIn 1.2s 0.6s forwards;
+    }
+
+    /* Stacked books illustration */
+    .book-stack {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .book {
+      position: relative;
+      border-radius: 2px 6px 6px 2px;
+      box-shadow: 3px 3px 12px rgba(0,0,0,0.12);
+      transition: transform 0.3s;
+    }
+
+    .book:hover { transform: translateX(8px) rotate(-1deg); }
+
+    .b1 { width: 160px; height: 28px; background: var(--tiger); margin-bottom: 4px; transform: rotate(-1.5deg); }
+    .b2 { width: 148px; height: 26px; background: var(--moss); margin-bottom: 4px; transform: rotate(0.8deg); }
+    .b3 { width: 170px; height: 30px; background: var(--lily); margin-bottom: 4px; transform: rotate(-0.5deg); }
+    .b4 { width: 155px; height: 24px; background: #8B5E3C; margin-bottom: 4px; transform: rotate(1.2deg); }
+    .b5 { width: 162px; height: 32px; background: var(--ink); margin-bottom: 4px; transform: rotate(-0.3deg); }
+    .b6 { width: 150px; height: 26px; background: #C1440E; transform: rotate(0.6deg); }
+
+    .tiger-lily-svg {
+      position: absolute;
+      top: 60px;
+      right: 60px;
+      width: 120px;
+      opacity: 0.85;
+      animation: float 5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+
+    .hero-number {
+      position: absolute;
+      bottom: 3rem;
+      right: 3rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 9rem;
+      font-weight: 900;
+      color: var(--dust);
+      opacity: 0.3;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      background: var(--tiger);
+      overflow: hidden;
+      padding: 0.9rem 0;
+      position: relative;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: scroll 18s linear infinite;
+    }
+
+    .marquee-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream);
+      padding: 0 2.5rem;
+      white-space: nowrap;
+    }
+
+    .marquee-sep { color: var(--lily); margin: 0 0.5rem; }
+
+    @keyframes scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* FEATURED */
+    .section { padding: 7rem 5rem; }
+    .section-sm { padding: 4rem 5rem; }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--tiger);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--ink);
+      max-width: 560px;
+    }
+
+    .section-title em { font-style: italic; color: var(--tiger); }
+
+    /* BOOKS GRID */
+    .books-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3.5rem;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2.5rem;
+    }
+
+    .book-card {
+      position: relative;
+      cursor: none;
+      group: true;
+    }
+
+    .book-cover {
+      width: 100%;
+      aspect-ratio: 2/3;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1.2rem;
+      transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .book-card:hover .book-cover { transform: translateY(-6px) rotate(-1deg); }
+
+    .book-cover-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .bc1 { background: linear-gradient(160deg, #E8521A 0%, #8B1A00 100%); }
+    .bc2 { background: linear-gradient(160deg, #3D4A2E 0%, #1A2210 100%); }
+    .bc3 { background: linear-gradient(160deg, #C9B99A 0%, #8B6F47 100%); }
+    .bc4 { background: linear-gradient(160deg, #1A1208 0%, #3D2B10 100%); }
+
+    .bc-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 0.4rem;
+    }
+
+    .bc-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .book-info { padding: 0 0.2rem; }
+
+    .book-author {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--dust);
+      margin-bottom: 0.3rem;
+    }
+
+    .book-title-sm {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+    }
+
+    .book-price {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--tiger);
+      letter-spacing: 0.05em;
+    }
+
+    .book-badge {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: var(--lily);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.6rem;
+    }
+
+    /* ABOUT STRIP */
+    .about-strip {
+      background: var(--ink);
+      color: var(--cream);
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      min-height: 520px;
+      overflow: hidden;
+    }
+
+    .about-content {
+      padding: 6rem 4rem 6rem 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-content .section-label { color: var(--lily); }
+
+    .about-content .section-title { color: var(--cream); max-width: 100%; }
+
+    .about-text {
+      margin-top: 1.8rem;
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(250,245,236,0.75);
+      max-width: 440px;
+    }
+
+    .about-stats {
+      margin-top: 3rem;
+      display: flex;
+      gap: 3rem;
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--tiger);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dust);
+      margin-top: 0.3rem;
+    }
+
+    .about-visual {
+      position: relative;
+      background: #221810;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.12;
+      background-image: repeating-linear-gradient(
+        45deg,
+        var(--tiger) 0, var(--tiger) 1px,
+        transparent 0, transparent 50%
+      );
+      background-size: 24px 24px;
+    }
+
+    .about-quote {
+      position: relative;
+      z-index: 2;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .quote-mark {
+      font-family: 'Playfair Display', serif;
+      font-size: 8rem;
+      color: var(--tiger);
+      opacity: 0.3;
+      line-height: 0.5;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .quote-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.5;
+    }
+
+    .quote-author {
+      margin-top: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dust);
+    }
+
+    /* CATEGORIES */
+    .categories { padding: 6rem 5rem; background: var(--pale); }
+
+    .cat-grid {
+      margin-top: 3.5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .cat-card {
+      padding: 2.5rem;
+      border: 1px solid var(--dust);
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+      transition: border-color 0.3s, transform 0.3s;
+      background: var(--cream);
+    }
+
+    .cat-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--tiger);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .cat-card:hover { transform: translateY(-4px); border-color: var(--tiger); }
+    .cat-card:hover::before { transform: scaleX(1); }
+
+    .cat-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+
+    .cat-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .cat-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dust);
+    }
+
+    .cat-num {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--pale);
+      line-height: 1;
+    }
+
+    /* NEWSLETTER */
+    .newsletter {
+      background: var(--tiger);
+      padding: 5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .nl-text .section-label { color: rgba(250,245,236,0.7); }
+
+    .nl-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 900;
+      color: var(--cream);
+      line-height: 1.1;
+    }
+
+    .nl-form {
+      display: flex;
+      gap: 0;
+      flex-shrink: 0;
+      width: 420px;
+    }
+
+    .nl-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      background: rgba(250,245,236,0.15);
+      border: 1px solid rgba(250,245,236,0.3);
+      border-right: none;
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      outline: none;
+      transition: background 0.2s;
+    }
+
+    .nl-input::placeholder { color: rgba(250,245,236,0.5); }
+    .nl-input:focus { background: rgba(250,245,236,0.22); }
+
+    .nl-btn {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 1rem 1.8rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      cursor: none;
+      transition: background 0.2s;
+    }
+    .nl-btn:hover { background: #2d1e08; }
+
+    /* FOOTER */
+    footer {
+      background: var(--ink);
+      color: var(--cream);
+      padding: 5rem 5rem 2.5rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 4rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid rgba(201,185,154,0.15);
+    }
+
+    .footer-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand-name span { color: var(--tiger); }
+
+    .footer-tagline {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(250,245,236,0.55);
+      max-width: 240px;
+    }
+
+    .footer-col-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--tiger);
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 0.7rem; }
+
+    .footer-links a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: rgba(250,245,236,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--cream); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: rgba(250,245,236,0.3);
+      text-transform: uppercase;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-socials a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(250,245,236,0.4);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-socials a:hover { color: var(--tiger); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--tiger); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .books-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-strip { grid-template-columns: 1fr; }
+      .cat-grid { grid-template-columns: 1fr 1fr; }
+      .newsletter { flex-direction: column; }
+      .nl-form { width: 100%; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .section, .section-sm { padding: 4rem 2rem; }
+      nav { padding: 1.2rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Tiger&nbsp;Lily&nbsp;Books</div>
+    <ul class="nav-links">
+      <li><a href="#books">Browse</a></li>
+      <li><a href="#categories">Genres</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#contact">Visit Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Est. 2024 · Bengaluru</p>
+      <h1 class="hero-title">Tiger<br/><em>Lily</em><br/>Books</h1>
+      <p class="hero-sub">A curated sanctuary for stories, ideas, and the quiet pleasure of turning pages.</p>
+      <div class="hero-cta">
+        <a href="#books" class="btn-primary">Explore Books</a>
+        <a href="#about" class="btn-ghost">Our Story →</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- Tiger Lily SVG -->
+      <svg class="tiger-lily-svg" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Stem -->
+        <path d="M60 155 Q58 100 60 60" stroke="#3D4A2E" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Leaves -->
+        <path d="M60 110 Q40 105 30 95" stroke="#3D4A2E" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M60 125 Q80 118 90 108" stroke="#3D4A2E" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- Petals -->
+        <path d="M60 45 Q45 20 40 5 Q55 30 60 45Z" fill="#E8521A" opacity="0.9"/>
+        <path d="M60 45 Q75 20 80 5 Q65 30 60 45Z" fill="#E8521A" opacity="0.9"/>
+        <path d="M60 45 Q30 35 15 30 Q45 40 60 45Z" fill="#F4A261" opacity="0.85"/>
+        <path d="M60 45 Q90 35 105 30 Q75 40 60 45Z" fill="#F4A261" opacity="0.85"/>
+        <path d="M60 45 Q35 55 20 65 Q48 52 60 45Z" fill="#C1440E" opacity="0.8"/>
+        <path d="M60 45 Q85 55 100 65 Q72 52 60 45Z" fill="#C1440E" opacity="0.8"/>
+        <!-- Spots -->
+        <circle cx="52" cy="38" r="2" fill="#1A1208" opacity="0.4"/>
+        <circle cx="68" cy="38" r="2" fill="#1A1208" opacity="0.4"/>
+        <circle cx="55" cy="44" r="1.5" fill="#1A1208" opacity="0.3"/>
+        <circle cx="65" cy="44" r="1.5" fill="#1A1208" opacity="0.3"/>
+        <!-- Center -->
+        <circle cx="60" cy="45" r="5" fill="#8B1A00"/>
+        <circle cx="60" cy="45" r="2.5" fill="#FAF5EC"/>
+        <!-- Stamens -->
+        <line x1="60" y1="40" x2="58" y2="28" stroke="#C1440E" stroke-width="1"/>
+        <line x1="60" y1="40" x2="62" y2="28" stroke="#C1440E" stroke-width="1"/>
+        <circle cx="58" cy="27" r="2" fill="#F4A261"/>
+        <circle cx="62" cy="27" r="2" fill="#F4A261"/>
+      </svg>
+
+      <!-- Book stack -->
+      <div class="book-stack">
+        <div class="book b1"></div>
+        <div class="book b2"></div>
+        <div class="book b3"></div>
+        <div class="book b4"></div>
+        <div class="book b5"></div>
+        <div class="book b6"></div>
+      </div>
+
+      <div class="hero-number">01</div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Fiction <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Poetry <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Philosophy <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Art Books <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">History <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Mystery <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Children's <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Science <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Travel <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Fiction <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Poetry <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Philosophy <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Art Books <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">History <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Mystery <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Children's <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Science <span class="marquee-sep">✦</span></span>
+      <span class="marquee-item">Travel <span class="marquee-sep">✦</span></span>
+    </div>
+  </div>
+
+  <!-- FEATURED BOOKS -->
+  <section class="section" id="books">
+    <div class="books-header reveal">
+      <div>
+        <p class="section-label">Curated Picks</p>
+        <h2 class="section-title">This Week's<br/><em>Favourites</em></h2>
+      </div>
+      <a href="#" class="btn-ghost">View All →</a>
+    </div>
+    <div class="books-grid">
+      <div class="book-card reveal">
+        <div class="book-cover bc1">
+          <div class="book-cover-inner">
+            <span class="bc-label">Literary Fiction</span>
+            <span class="bc-title">The Midnight Garden</span>
+          </div>
+          <div class="book-badge">Staff Pick</div>
+        </div>
+        <div class="book-info">
+          <p class="book-author">Anika Mehra</p>
+          <p class="book-title-sm">The Midnight Garden</p>
+          <p class="book-price">₹ 599</p>
+        </div>
+      </div>
+      <div class="book-card reveal" style="transition-delay:0.1s">
+        <div class="book-cover bc2">
+          <div class="book-cover-inner">
+            <span class="bc-label">Nature Writing</span>
+            <span class="bc-title">Forests of Silence</span>
+          </div>
+        </div>
+        <div class="book-info">
+          <p class="book-author">Rahul Sen</p>
+          <p class="book-title-sm">Forests of Silence</p>
+          <p class="book-price">₹ 449</p>
+        </div>
+      </div>
+      <div class="book-card reveal" style="transition-delay:0.2s">
+        <div class="book-cover bc3">
+          <div class="book-cover-inner">
+            <span class="bc-label">Poetry</span>
+            <span class="bc-title">Amber & Dust</span>
+          </div>
+          <div class="book-badge">New</div>
+        </div>
+        <div class="book-info">
+          <p class="book-author">Priya Rajan</p>
+          <p class="book-title-sm">Amber & Dust</p>
+          <p class="book-price">₹ 350</p>
+        </div>
+      </div>
+      <div class="book-card reveal" style="transition-delay:0.3s">
+        <div class="book-cover bc4">
+          <div class="book-cover-inner">
+            <span class="bc-label">Philosophy</span>
+            <span class="bc-title">On Solitude</span>
+          </div>
+        </div>
+        <div class="book-info">
+          <p class="book-author">Vikram Nair</p>
+          <p class="book-title-sm">On Solitude</p>
+          <p class="book-price">₹ 525</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <div class="about-strip" id="about">
+    <div class="about-content reveal">
+      <p class="section-label">Our Story</p>
+      <h2 class="section-title">More Than<br/>a <em>Bookshop</em></h2>
+      <p class="about-text">Tiger Lily Books was born from a love of slow afternoons, dog-eared pages, and the serendipity of the perfect recommendation. We are a neighbourhood bookstore with a carefully curated collection — every title chosen with intention.</p>
+      <div class="about-stats">
+        <div>
+          <div class="stat-num">4K+</div>
+          <div class="stat-label">Titles in stock</div>
+        </div>
+        <div>
+          <div class="stat-num">60+</div>
+          <div class="stat-label">Genres</div>
+        </div>
+        <div>
+          <div class="stat-num">12</div>
+          <div class="stat-label">Events/year</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <div class="about-pattern"></div>
+      <div class="about-quote">
+        <span class="quote-mark">"</span>
+        <p class="quote-text">A room without books is like a body without a soul.</p>
+        <p class="quote-author">— Marcus Tullius Cicero</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="categories" id="categories">
+    <div class="reveal">
+      <p class="section-label">Explore</p>
+      <h2 class="section-title">Browse by<br/><em>Genre</em></h2>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card reveal">
+        <span class="cat-icon">📖</span>
+        <div class="cat-num">01</div>
+        <h3 class="cat-name">Literary Fiction</h3>
+        <p class="cat-count">380 titles</p>
+      </div>
+      <div class="cat-card reveal" style="transition-delay:0.1s">
+        <span class="cat-icon">🔍</span>
+        <div class="cat-num">02</div>
+        <h3 class="cat-name">Mystery & Thriller</h3>
+        <p class="cat-count">210 titles</p>
+      </div>
+      <div class="cat-card reveal" style="transition-delay:0.2s">
+        <span class="cat-icon">🌿</span>
+        <div class="cat-num">03</div>
+        <h3 class="cat-name">Nature & Travel</h3>
+        <p class="cat-count">145 titles</p>
+      </div>
+      <div class="cat-card reveal" style="transition-delay:0.3s">
+        <span class="cat-icon">🎨</span>
+        <div class="cat-num">04</div>
+        <h3 class="cat-name">Art & Photography</h3>
+        <p class="cat-count">98 titles</p>
+      </div>
+      <div class="cat-card reveal" style="transition-delay:0.4s">
+        <span class="cat-icon">✦</span>
+        <div class="cat-num">05</div>
+        <h3 class="cat-name">Poetry</h3>
+        <p class="cat-count">175 titles</p>
+      </div>
+      <div class="cat-card reveal" style="transition-delay:0.5s">
+        <span class="cat-icon">🌏</span>
+        <div class="cat-num">06</div>
+        <h3 class="cat-name">History & Culture</h3>
+        <p class="cat-count">260 titles</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter" id="contact">
+    <div class="nl-text">
+      <p class="section-label">Stay in the Loop</p>
+      <h2 class="nl-title">New arrivals.<br/>Reading lists.<br/>Events.</h2>
+    </div>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="your@email.com"/>
+      <button class="nl-btn">Subscribe</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">Tiger <span>Lily</span> Books</div>
+        <p class="footer-tagline">A carefully curated bookstore for curious minds and wandering hearts.</p>
+      </div>
+      <div>
+        <p class="footer-col-title">Shop</p>
+        <ul class="footer-links">
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Bestsellers</a></li>
+          <li><a href="#">Staff Picks</a></li>
+          <li><a href="#">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Visit</p>
+        <ul class="footer-links">
+          <li><a href="#">Find Us</a></li>
+          <li><a href="#">Events</a></li>
+          <li><a href="#">Reading Club</a></li>
+          <li><a href="#">Cafe</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Info</p>
+        <ul class="footer-links">
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Wholesale</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2024 Tiger Lily Books · All rights reserved</p>
+      <div class="footer-socials">
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+        <a href="#">Goodreads</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .book-card, .cat-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        ring.style.width = '52px';
+        ring.style.height = '52px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '12px';
+        cursor.style.height = '12px';
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+      });
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
